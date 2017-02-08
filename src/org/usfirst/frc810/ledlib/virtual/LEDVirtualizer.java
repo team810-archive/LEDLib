@@ -45,4 +45,7 @@ public class LEDVirtualizer extends JFrame {
 	public LEDCanvas getCanvas() {
 		return canvas;
 	}
+	public void selectStrip(int i){
+		canvas.setSelectedStrip(i);
+	}
 }

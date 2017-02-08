@@ -32,10 +32,14 @@ public class VirtualizerTest {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// TODO Auto-generated method stub
-				if (e.getKeyCode() == KeyEvent.VK_N)
+				if (e.getKeyCode() == KeyEvent.VK_N){
 					LEDv.addLEDStrip(getRandomStrip(10));
-				else if (e.getKeyCode() == KeyEvent.VK_D)
+					LEDv.selectStrip(LEDv.getLEDStrips().size() - 1);
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_D){
 					LEDv.getLEDStrips().remove(LEDv.getCanvas().getSelectedStrip());
+					LEDv.selectStrip(0);
+				}
 			}
 
 			@Override

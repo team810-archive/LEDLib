@@ -56,7 +56,9 @@ public class LEDCanvas extends JComponent implements KeyListener{
 		// TODO Auto-generated method stub
 		
 	}
-	
+	public void setSelectedStrip(int i){
+		this.selectedStrip = i;
+	}
 	public int getSelectedStrip() {
 		return selectedStrip;
 	}
