@@ -1,10 +1,11 @@
 package org.usfirst.frc810.ledlib;
 
 import java.awt.Color;
-import java.util.function.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.IntFunction;
+import java.util.function.Supplier;
 
 public abstract class LEDStrip {
 
@@ -13,7 +14,12 @@ public abstract class LEDStrip {
 	 * @param LEDNum The index of the LED, starting at 0
 	 * @param c The color to set the LED to
 	 */
-	public abstract void setLED(int LEDNum, Color c);
+	public final void setLEDColor(int LEDNum, Color c) {
+		setLED(LEDNum, c);
+	}
+	
+
+	protected abstract void setLED(int LEDNum, Color c);
 	
 	/**
 	 * Get the total number of LEDs on the LED strip
@@ -39,22 +45,31 @@ public abstract class LEDStrip {
 		if(LEDEnd>=getNumLEDs()) throw new LEDOutOfRangeException(LEDEnd, getNumLEDs());
 		
 		for(int i = LEDStart; i<LEDEnd; i++){
-			setLED(i,c);
+			setLEDColor(i,c);
 		}
 	}
 	
 	/**
 	 * Set the LEDs to a particular color 
-	 * @param function A function to map a particular LED index to a color. Return an empty optional to leave the LED set as-is.
+	 * @param mapper A function to map a particular LED index to a color. Return an empty optional to leave the LED set as-is.
 	 */
 	public void setAllLEDs(IntFunction<Optional<Color>> mapper){
 		
 	}
 	
+	/**
+	 * Returns a LEDPoint representing a specific LED on the strip
+	 * @param index The LED's position on the LED strip
+	 * @return A LEDPoint representing that specific LED
+	 */
 	public LEDPoint getPoint(int index){
 		return new StripLEDPoint(index);
 	}
 	
+	/**
+	 * Returns a List of all the points on the LEDStrip
+	 * @return All the points on the strip
+	 */
 	public List<LEDPoint> getAllPoints(){
 		List<LEDPoint> points = new ArrayList<>(getNumLEDs());
 		
@@ -65,7 +80,16 @@ public abstract class LEDStrip {
 		return points;
 	}
 	
-	private class StripLEDPoint implements LEDPoint{
+	/**
+	 * Sets the LED Color using a supplier. The supplier should return an empty optional to leave the LED color as-is
+	 * @param index The index of the LED to set the color for, starting at 0
+	 * @param colorSupplier A supplier for the LED Color
+	 */
+	public void setLEDColor(int index, Supplier<Optional<Color>> colorSupplier) {
+		this.getPoint(index).setLEDColor(colorSupplier);
+	}
+	
+	private class StripLEDPoint extends LEDPoint{
 		private int index;
 
 		StripLEDPoint(int index){
@@ -73,8 +97,8 @@ public abstract class LEDStrip {
 		}
 
 		@Override
-		public void setColor(Color c) {
-			LEDStrip.this.setLED(index, c);
+		public void setLED(Color c) {
+			LEDStrip.this.setLEDColor(index, c);
 		}
 	}
 }
