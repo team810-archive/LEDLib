@@ -1,8 +1,9 @@
-package org.usfirst.frc810.tests;
+package org.usfirst.frc810.ledlib.virtual;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Optional;
 import java.util.Random;
 
 import org.usfirst.frc810.ledlib.virtual.LEDVirtualizer;
@@ -17,8 +18,8 @@ public class VirtualizerTest {
 	
 	public VirtualizerTest(){
 		LEDv = new LEDVirtualizer();
-		VirtualLEDStrip strip = new VirtualLEDStrip();
-		VirtualLEDStrip strip2 = new VirtualLEDStrip();
+		VirtualLEDStrip strip = new VirtualLEDStrip(10, 1);
+		VirtualLEDStrip strip2 = new VirtualLEDStrip(10,1);
 		LEDv.addLEDStrip(getRandomStrip(10));
 		LEDv.addLEDStrip(getRandomStrip(10));
 		LEDv.addKeyListener(new KeyListener(){
@@ -52,10 +53,11 @@ public class VirtualizerTest {
 	}
 	public VirtualLEDStrip getRandomStrip(int length){
 		Random random = new Random();
-		VirtualLEDStrip strip = new VirtualLEDStrip();
-		for(int i = 0; i<length; i++){
-			strip.setLEDColor(i, new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
-		}
+		VirtualLEDStrip strip = new VirtualLEDStrip(length,1);
+		
+		strip.setAllLEDs(i->Optional.ofNullable(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255))));
+			
+		
 		return strip;
 	}
 }

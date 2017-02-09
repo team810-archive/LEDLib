@@ -8,30 +8,29 @@ import org.usfirst.frc810.ledlib.LEDStrip;
 
 public class VirtualLEDStrip extends LEDStrip{
 	private int density;
-	private List<VirtualLEDPoint> leds = new ArrayList<VirtualLEDPoint>();
-	public VirtualLEDStrip(){
-		density = 1;
+	private int size;
+	private Color[] leds;
+	public VirtualLEDStrip(int size, int density){
+		leds = new Color[size];
+		this.size = size;
+		density = density;
 	}
 	
 	@Override
 	protected void setLED(int LEDNum, Color c) {
-		if(LEDNum >= 0 && leds.size() > LEDNum){
-			leds.get(LEDNum).setLED(c);
-		}
-		else if(LEDNum >= 0){
-			leds.add(new VirtualLEDPoint(c));
-		}
+		
+		leds[LEDNum]=c;
+	
 	}
 	
-
-	public List<VirtualLEDPoint> getAllVirtualPoints(){
-		return leds;
+	public Color getColor(int i){
+		return leds[i];
 	}
 
 	@Override
 	public int getNumLEDs() {
 		// TODO Auto-generated method stub
-		return leds.size();
+		return size;
 	}
 
 	@Override
