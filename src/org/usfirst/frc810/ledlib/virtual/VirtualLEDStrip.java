@@ -1,43 +1,46 @@
 package org.usfirst.frc810.ledlib.virtual;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.Graphics;
 
-import org.usfirst.frc810.ledlib.LEDStrip;
+import javax.swing.JComponent;
 
-public class VirtualLEDStrip extends LEDStrip{
-	private int density;
-	private int size;
-	private Color[] leds;
-	public VirtualLEDStrip(int size, int density){
-		leds = new Color[size];
-		this.size = size;
-		density = density;
+import org.usfirst.frc810.ledlib.HardwareLEDStrip;
+
+public class VirtualLEDStrip extends HardwareLEDStrip {
+
+	public VirtualLEDStrip(int size, int density) {
+		super(size, density);
 	}
-	
+
 	@Override
-	protected void setLED(int LEDNum, Color c) {
+	protected void setLED(int i, Color c) {
+		// TODO implement to dans liking
 		
-		leds[LEDNum]=c;
-	
-	}
-	
-	public Color getColor(int i){
-		return leds[i];
 	}
 
-	@Override
-	public int getNumLEDs() {
-		// TODO Auto-generated method stub
-		return size;
-	}
+	
+	
+	
+	private class LEDComponent extends JComponent {
+		
+		private VirtualLEDStrip vLEDStrip = VirtualLEDStrip.this;
+		
+		public LEDComponent() {
+		}
 
-	@Override
-	public int getLEDDensity() {
-		// TODO Auto-generated method stub
-		return density;
+
+		@Override
+		public void paint(Graphics g) {
+			double width = getWidth(); // 200 is default size	
+			int size = vLEDStrip.getNumLEDs();
+			double ledSize = Math.min(width / size,getHeight());
+			int x = 0;
+			for(Color c : vLEDStrip){
+				g.setColor(c);
+				g.fillOval(x, 0, size, size);
+				x+=size;
+			}
+		}
 	}
-	
-	
 }

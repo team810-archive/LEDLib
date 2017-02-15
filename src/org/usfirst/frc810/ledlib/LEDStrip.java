@@ -2,24 +2,22 @@ package org.usfirst.frc810.ledlib;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
-public abstract class LEDStrip {
+public abstract class LEDStrip implements Iterable<Color> {
 
 	/**
 	 * Set the color of an individual LED
 	 * @param LEDNum The index of the LED, starting at 0
 	 * @param c The color to set the LED to
 	 */
-	public final void setLEDColor(int LEDNum, Color c) {
-		setLED(LEDNum, c);
-	}
-	
-
-	protected abstract void setLED(int LEDNum, Color c);
+	public abstract void setLEDColor(int LEDNum, Color c);
+	public abstract Color getLEDColor(int LEDNUM);
 	
 	/**
 	 * Get the total number of LEDs on the LED strip
@@ -32,6 +30,12 @@ public abstract class LEDStrip {
 	 * @return The number of LEDs per meter
 	 */
 	public abstract int getLEDDensity();
+	
+	@Override
+	public Iterator<Color> iterator(){
+		return new LEDIterator();
+		
+	}
 	
 	/**
 	 * Set a range of LEDs to the same color
@@ -60,28 +64,7 @@ public abstract class LEDStrip {
 		}
 	}
 	
-	/**
-	 * Returns a LEDPoint representing a specific LED on the strip
-	 * @param index The LED's position on the LED strip
-	 * @return A LEDPoint representing that specific LED
-	 */
-	public final LEDPoint getPoint(int index){
-		return new StripLEDPoint(index);
-	}
-	
-	/**
-	 * Returns a List of all the points on the LEDStrip
-	 * @return All the points on the strip
-	 */
-	public final List<LEDPoint> getAllPoints(){
-		List<LEDPoint> points = new ArrayList<>(getNumLEDs());
-		
-		for(int i = 0; i<getNumLEDs(); i++){
-			points.add(getPoint(i));
-		}
-		
-		return points;
-	}
+
 	
 	/**
 	 * Sets the LED Color using a supplier. The supplier should return an empty optional to leave the LED color as-is
@@ -89,19 +72,25 @@ public abstract class LEDStrip {
 	 * @param colorSupplier A supplier for the LED Color
 	 */
 	public final void setLEDColor(int index, Supplier<Optional<Color>> colorSupplier) {
-		this.getPoint(index).setLEDColor(colorSupplier);
+		colorSupplier.get().ifPresent(c->this.setLEDColor(index,c));
 	}
 	
-	private class StripLEDPoint extends LEDPoint{
-		private int index;
+	private class LEDIterator implements Iterator<Color>{
 
-		StripLEDPoint(int index){
-			this.index = index;
+		int curPos = 0;
+		
+		@Override
+		public boolean hasNext() {
+			return curPos < LEDStrip.this.getNumLEDs();
 		}
 
 		@Override
-		public void setLED(Color c) {
-			LEDStrip.this.setLEDColor(index, c);
+		public Color next() throws NoSuchElementException {
+			if(!hasNext()) throw new NoSuchElementException();
+			Color c = LEDStrip.this.getLEDColor(curPos);
+			curPos++;
+			return c;
 		}
+		
 	}
 }
