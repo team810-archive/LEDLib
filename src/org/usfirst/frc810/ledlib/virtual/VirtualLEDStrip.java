@@ -9,14 +9,18 @@ import org.usfirst.frc810.ledlib.HardwareLEDStrip;
 
 public class VirtualLEDStrip extends HardwareLEDStrip {
 
+	private LEDComponent ledComponent= null;
 	public VirtualLEDStrip(int size, int density) {
 		super(size, density);
 	}
 
 	@Override
 	protected void setLED(int i, Color c) {
-		// TODO implement to dans liking
-		
+		getComponent().repaint();
+	}
+	
+	public LEDComponent getComponent(){
+		return (ledComponent == null) ? ledComponent = new LEDComponent() : ledComponent; // if the ledComponent isn't initialized, set it to a new instantiated ledComponenet and return it, if it is already created return the instantiated.
 	}
 
 	

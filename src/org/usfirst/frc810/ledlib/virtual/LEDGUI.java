@@ -11,7 +11,11 @@ import java.util.List;
 import javax.swing.JFrame;
 
 public class LEDGUI extends JFrame implements MouseListener, MouseMotionListener, KeyListener{
-	
+	private static LEDGUI instance = null;
+	//singleton in a one line way
+	public static LEDGUI getInstance(){
+		return (instance == null) ? instance = new LEDGUI() : instance;
+	}
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
@@ -77,7 +81,7 @@ public class LEDGUI extends JFrame implements MouseListener, MouseMotionListener
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addKeyListener(this);
-		
+		setVisible(true);
 	}
 	
 }

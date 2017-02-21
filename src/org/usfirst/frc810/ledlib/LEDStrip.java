@@ -11,6 +11,8 @@ import java.util.function.Supplier;
 
 public abstract class LEDStrip implements Iterable<Color> {
 
+	private LEDScheduler schedulerInstance = null;
+	
 	/**
 	 * Set the color of an individual LED
 	 * @param LEDNum The index of the LED, starting at 0
@@ -73,6 +75,13 @@ public abstract class LEDStrip implements Iterable<Color> {
 	 */
 	public final void setLEDColor(int index, Supplier<Optional<Color>> colorSupplier) {
 		colorSupplier.get().ifPresent(c->this.setLEDColor(index,c));
+	}
+	
+	public final LEDScheduler getScheduler(){		
+		if(schedulerInstance == null){
+			schedulerInstance = new LEDScheduler(this);
+		}
+		return schedulerInstance;
 	}
 	
 	private class LEDIterator implements Iterator<Color>{
